@@ -1,11 +1,10 @@
 pragma solidity ^0.6.0;
 
-import '../distribution/BACDAIPool.sol';
-import '../distribution/BACSUSDPool.sol';
-import '../distribution/BACUSDCPool.sol';
-import '../distribution/BACUSDTPool.sol';
-import '../distribution/BACyCRVPool.sol';
+import '@openzeppelin/contracts/math/SafeMath.sol';
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+
 import '../interfaces/IDistributor.sol';
+import '../interfaces/IRewardDistributionRecipient.sol';
 
 contract InitialCashDistributor is IDistributor {
     using SafeMath for uint256;

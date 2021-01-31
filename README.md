@@ -1,12 +1,6 @@
-# Basis Cash
+# BasisPearl Cash
 
-![Background Image](./assets/bg.jpeg)
-
-[![Twitter Follow](https://img.shields.io/twitter/follow/basiscash?label=Follow)](https://twitter.com/basiscash)
-[![License](https://img.shields.io/github/license/Basis-cash/basiscashprotocol)](https://github.com/Basis-Cash/basiscash-protocol/blob/master/LICENSE)
-[![Coverage Status](https://coveralls.io/repos/github/Basis-Cash/basiscash-protocol/badge.svg?branch=master)](https://coveralls.io/github/Basis-Cash/basiscash-protocol?branch=master)
-
-Basis Cash is a lightweight implementation of the [Basis Protocol](basis.io) on Ethereum. 
+Basis Pearl Cash is a lightweight implementation of the [Basis Protocol](basis.io) on HECO Chain. 
 
 ## History of Basis 
 

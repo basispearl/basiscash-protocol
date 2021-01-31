@@ -12,7 +12,7 @@ import './interfaces/IUniswapV2Factory.sol';
 
 // fixed window oracle that recomputes the average price for the entire period once every period
 // note that the price average is only guaranteed to be over at least 1 period, but may be over a longer period
-contract Oracle is Epoch {
+contract BondOracle is Epoch {
     using FixedPoint for *;
     using SafeMath for uint256;
 
@@ -50,7 +50,7 @@ contract Oracle is Epoch {
         uint112 reserve0;
         uint112 reserve1;
         (reserve0, reserve1, blockTimestampLast) = _pair.getReserves();
-        require(reserve0 != 0 && reserve1 != 0, 'Oracle: NO_RESERVES'); // ensure that there's liquidity in the pair
+        require(reserve0 != 0 && reserve1 != 0, 'BondOracle: NO_RESERVES'); // ensure that there's liquidity in the pair
     }
 
     /* ========== MUTABLE FUNCTIONS ========== */
@@ -94,7 +94,7 @@ contract Oracle is Epoch {
         if (token == token0) {
             amountOut = price0Average.mul(amountIn).decode144();
         } else {
-            require(token == token1, 'Oracle: INVALID_TOKEN');
+            require(token == token1, 'BondOracle: INVALID_TOKEN');
             amountOut = price1Average.mul(amountIn).decode144();
         }
     }
