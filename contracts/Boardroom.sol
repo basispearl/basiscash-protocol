@@ -52,10 +52,10 @@ contract Boardroom is ShareWrapper, ContractGuard, Operator {
 
     /* ========== PARAMETERS =============== */
 
-    uint256 public withdrawLockupEpochs = 4; // TODO 4
-    uint256 public rewardLockupEpochs = 2; // TODO 2
-    uint256 public epochAlignTimestamp = 1614506400; // TODO
-    uint256 public epochPeriod = 3600; // TODO 43200
+    uint256 public withdrawLockupEpochs = 4;
+    uint256 public rewardLockupEpochs = 2;
+    uint256 public epochAlignTimestamp = 1614657600;
+    uint256 public epochPeriod = 43200;
 
     /* ========== DATA STRUCTURES ========== */
 
