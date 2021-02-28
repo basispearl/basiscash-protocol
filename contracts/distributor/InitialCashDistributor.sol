@@ -15,17 +15,23 @@ contract InitialCashDistributor is IDistributor {
 
     IERC20 public cash;
     IRewardDistributionRecipient[] public pools;
+    uint256[] public weights;
+    uint256 public totalWeight;
     uint256 public totalInitialBalance;
 
     constructor(
         IERC20 _cash,
         IRewardDistributionRecipient[] memory _pools,
+        uint256[] memory _weights,
+        uint256 _totalWeight,
         uint256 _totalInitialBalance
     ) public {
         require(_pools.length != 0, 'a list of BAC pools are required');
 
         cash = _cash;
         pools = _pools;
+        weights = _weights;
+        totalWeight = _totalWeight;
         totalInitialBalance = _totalInitialBalance;
     }
 
@@ -36,7 +42,7 @@ contract InitialCashDistributor is IDistributor {
         );
 
         for (uint256 i = 0; i < pools.length; i++) {
-            uint256 amount = totalInitialBalance.div(pools.length);
+            uint256 amount = totalInitialBalance.mul(weights[i]).div(totalWeight);
 
             cash.transfer(address(pools[i]), amount);
             pools[i].notifyRewardAmount(amount);

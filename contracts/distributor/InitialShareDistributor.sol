@@ -18,19 +18,25 @@ contract InitialShareDistributor is IDistributor {
     uint256 public daibacInitialBalance;
     IRewardDistributionRecipient public daibasLPPool;
     uint256 public daibasInitialBalance;
+    IRewardDistributionRecipient public basPool;
+    uint256 public basInitialBalance;
 
     constructor(
         IERC20 _share,
         IRewardDistributionRecipient _daibacLPPool,
         uint256 _daibacInitialBalance,
         IRewardDistributionRecipient _daibasLPPool,
-        uint256 _daibasInitialBalance
+        uint256 _daibasInitialBalance,
+        IRewardDistributionRecipient _basPool,
+        uint256 _basInitialBalance
     ) public {
         share = _share;
         daibacLPPool = _daibacLPPool;
         daibacInitialBalance = _daibacInitialBalance;
         daibasLPPool = _daibasLPPool;
         daibasInitialBalance = _daibasInitialBalance;
+        basPool = _basPool;
+        basInitialBalance = _basInitialBalance;
     }
 
     function distribute() public override {
@@ -46,6 +52,10 @@ contract InitialShareDistributor is IDistributor {
         share.transfer(address(daibasLPPool), daibasInitialBalance);
         daibasLPPool.notifyRewardAmount(daibasInitialBalance);
         emit Distributed(address(daibasLPPool), daibasInitialBalance);
+
+        share.transfer(address(basPool), basInitialBalance);
+        basPool.notifyRewardAmount(basInitialBalance);
+        emit Distributed(address(basPool), basInitialBalance);
 
         once = false;
     }

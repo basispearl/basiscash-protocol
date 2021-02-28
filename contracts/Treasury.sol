@@ -48,8 +48,10 @@ contract Treasury is ContractGuard, Epoch {
     uint256 public cashPriceOne;
     uint256 public cashPriceCeiling;
     uint256 public bondDepletionFloor;
+    uint256 public inflationCeiling;
     uint256 private accumulatedSeigniorage = 0;
-    uint256 public fundAllocationRate = 0; // %
+    uint256 public fundAllocationRate = 3; // %3
+    uint256 public treasuryReserveRate = 50; // %50
 
     /* ========== CONSTRUCTOR ========== */
 
@@ -62,7 +64,7 @@ contract Treasury is ContractGuard, Epoch {
         address _boardroom,
         address _fund,
         uint256 _startTime
-    ) public Epoch(1 days, _startTime, 0) {
+    ) public Epoch(1 hours, _startTime, 0) { // TODO
         cash = _cash;
         bond = _bond;
         share = _share;
@@ -73,7 +75,9 @@ contract Treasury is ContractGuard, Epoch {
         fund = _fund;
 
         cashPriceOne = 10**18;
-        cashPriceCeiling = uint256(102).mul(cashPriceOne).div(10**2);
+        cashPriceCeiling = uint256(105).mul(cashPriceOne).div(10**2);
+        // inflation at most 10%
+        inflationCeiling = uint256(10).mul(cashPriceOne).div(10**2);
 
         bondDepletionFloor = uint256(1000).mul(cashPriceOne);
     }
@@ -169,6 +173,18 @@ contract Treasury is ContractGuard, Epoch {
         emit ContributionPoolRateChanged(msg.sender, rate);
     }
 
+    function setInflationCeiling(uint256 inflationCeiling_) public onlyOperator {
+        inflationCeiling = inflationCeiling_;
+    }
+
+    function setTreasuryReserveRate(uint256 treasuryReserveRate_) public onlyOperator {
+        require(
+            treasuryReserveRate_ >= 40 && treasuryReserveRate_ <= 100,
+            'Treasury: out of range'
+        );
+        treasuryReserveRate = treasuryReserveRate_;
+    }
+
     /* ========== MUTABLE FUNCTIONS ========== */
 
     function _updateCashPrice() internal {
@@ -213,7 +229,7 @@ contract Treasury is ContractGuard, Epoch {
         uint256 cashPrice = _getCashPrice(bondOracle);
         require(cashPrice == targetPrice, 'Treasury: cash price moved');
         require(
-            cashPrice > cashPriceCeiling, // price > $1.02
+            cashPrice > cashPriceCeiling, // price > $1.05
             'Treasury: cashPrice not eligible for bond purchase'
         );
         require(
@@ -251,6 +267,7 @@ contract Treasury is ContractGuard, Epoch {
             accumulatedSeigniorage
         );
         uint256 percentage = cashPrice.sub(cashPriceOne);
+        percentage = Math.min(percentage, inflationCeiling);
         uint256 seigniorage = cashSupply.mul(percentage).div(1e18);
         IBasisAsset(cash).mint(address(this), seigniorage);
 
@@ -270,7 +287,7 @@ contract Treasury is ContractGuard, Epoch {
 
         // ======================== BIP-4
         uint256 treasuryReserve = Math.min(
-            seigniorage,
+            seigniorage.mul(treasuryReserveRate).div(100),
             IERC20(bond).totalSupply().sub(accumulatedSeigniorage)
         );
         if (treasuryReserve > 0) {
