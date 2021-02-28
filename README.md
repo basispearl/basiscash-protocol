@@ -1,6 +1,8 @@
-# BasisPearl Cash
+# BasisPearl Cash V2
 
 Basis Pearl Cash is a lightweight implementation of the [Basis Protocol](basis.io) on HECO Chain. 
+
+Based on the V1 version,  Basis Pearl Cash V2 have absorbed community suggestions and made many improvements.
 
 ## History of Basis 
 
