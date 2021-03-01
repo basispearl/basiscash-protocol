@@ -69,7 +69,7 @@ contract BPSSharePool is
     IRewardDistributionRecipient
 {
     IERC20 public basisShare;
-    uint256 public DURATION = 180 days;
+    uint256 public DURATION = 90 days;
 
     uint256 public starttime;
     uint256 public periodFinish = 0;

@@ -52,10 +52,10 @@ contract Boardroom is ShareWrapper, ContractGuard, Operator {
 
     /* ========== PARAMETERS =============== */
 
-    uint256 public withdrawLockupEpochs = 4;
+    uint256 public withdrawLockupEpochs = 3;
     uint256 public rewardLockupEpochs = 2;
     uint256 public epochAlignTimestamp = 1614657600;
-    uint256 public epochPeriod = 43200;
+    uint256 public epochPeriod = 43200; 
 
     /* ========== DATA STRUCTURES ========== */
 
@@ -235,7 +235,7 @@ contract Boardroom is ShareWrapper, ContractGuard, Operator {
     {
         require(amount > 0, 'Boardroom: Cannot withdraw 0');
         require(canWithdraw(msg.sender), "Boardroom: still in withdraw lockup");
-
+        directors[msg.sender].epochTimerStart = getCurrentEpochTimestamp(); // reset
         super.withdraw(amount);
         emit Withdrawn(msg.sender, amount);
     }
@@ -249,6 +249,7 @@ contract Boardroom is ShareWrapper, ContractGuard, Operator {
         uint256 reward = directors[msg.sender].rewardEarned;
         if (reward > 0) {
             require(canClaimReward(msg.sender), "Boardroom: still in claimReward lockup");
+            directors[msg.sender].epochTimerStart = getCurrentEpochTimestamp(); // reset
             directors[msg.sender].rewardEarned = 0;
             cash.safeTransfer(msg.sender, reward);
             emit RewardPaid(msg.sender, reward);

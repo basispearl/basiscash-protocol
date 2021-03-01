@@ -92,7 +92,7 @@ contract HTWrapper {
 
 contract BPCCHTPool is HTWrapper, IRewardDistributionRecipient {
     IERC20 public basisCash;
-    uint256 public DURATION = 4 days;
+    uint256 public DURATION = 5 days;
     uint256 public MATURE_DURATION = 3 days;
     uint256 public MATURE_MAX = 10000; // 100%
     uint256 public MATURE_MIN = 100; // 1%
@@ -191,7 +191,7 @@ contract BPCCHTPool is HTWrapper, IRewardDistributionRecipient {
 
         if (depositFlag[msg.sender] == 0) {
             userLastGetRewardTime[msg.sender] = block.timestamp;
-            depositFlag[msg.sender] == 1;
+            depositFlag[msg.sender] = 1;
         }
 
         emit Staked(msg.sender, amount);
